@@ -65,12 +65,24 @@
                 </div>
 
                 <pool-statistics ref="poolStatistics"
-                                 statsType="miner" :poolName="poolName" :poolWebsite="poolWebsite" :poolURL="poolURL" :poolFee="poolFee" :poolReferralFee="poolReferralFee"
+                                 statsType="miner":poolName="poolName"
+                                 :poolWebsite="poolWebsite"
+                                 :poolURL="poolURL"
+                                 :poolFee="poolFee"
+                                 :poolReferralFee="poolReferralFee"
                                  :poolServers="poolServers"
-                                 :poolStatus="minerPoolStatus" :poolHashes="poolHashes" :poolMinersOnline="poolMinersOnline"
-                                 :poolBlocksConfirmed="poolBlocksConfirmed" :poolBlocksUnconfirmed="poolBlocksUnconfirmed" :poolBlocksConfirmedAndPaid="poolBlocksConfirmedAndPaid"
-                                 :poolTimeRemaining="poolTimeRemaining" :rewardReferralTotal="rewardReferralTotal" :rewardReferralConfirmed="rewardReferralConfirmed"
-                                 :poolBlocksBeingConfirmed="poolBlocksBeingConfirmed" :networkHashRate="networkHashRate">
+                                 :poolStatus="minerPoolStatus"
+                                 :poolHashes="poolHashes"
+                                 :poolHashesReported="poolHashesReported"
+                                 :poolMinersOnline="poolMinersOnline"
+                                 :poolBlocksConfirmed="poolBlocksConfirmed"
+                                 :poolBlocksUnconfirmed="poolBlocksUnconfirmed"
+                                 :poolBlocksConfirmedAndPaid="poolBlocksConfirmedAndPaid"
+                                 :poolTimeRemaining="poolTimeRemaining"
+                                 :rewardReferralTotal="rewardReferralTotal"
+                                 :rewardReferralConfirmed="rewardReferralConfirmed"
+                                 :poolBlocksBeingConfirmed="poolBlocksBeingConfirmed"
+                                 :networkHashRate="networkHashRate">
                 </pool-statistics>
 
             </div>
@@ -105,6 +117,7 @@
                 minerPoolStatus: '',
 
                 poolHashes: 0,
+                poolHashesReported: 0,
                 poolMinersOnline: 0,
                 poolBlocksConfirmed: 0,
                 poolBlocksConfirmedAndPaid: 0,
@@ -176,10 +189,7 @@
 
                     this.getPoolServers();
 
-                    this.subscribeMinerPoolStatistics();
-
                 }
-
 
             },
 
@@ -190,34 +200,16 @@
 
             },
 
-            subscribeMinerPoolStatistics(){
-
-                if (this.subscribedMinerPoolStatistics) return ;
-
-                this.subscribedMinerPoolStatistics = true;
-
-                this.poolHashes = WebDollar.Blockchain.MinerPoolManagement.minerPoolStatistics.poolHashes;
-                this.poolMinersOnline = WebDollar.Blockchain.MinerPoolManagement.minerPoolStatistics.poolMinersOnline.length;
-                this.poolBlocksConfirmed = WebDollar.Blockchain.MinerPoolManagement.minerPoolStatistics.poolBlocksConfirmed;
-                this.poolBlocksConfirmedAndPaid = WebDollar.Blockchain.MinerPoolManagement.minerPoolStatistics.poolBlocksConfirmedAndPaid;
-                this.poolBlocksUnconfirmed = WebDollar.Blockchain.MinerPoolManagement.minerPoolStatistics.poolBlocksUnconfirmed;
-                this.poolBlocksBeingConfirmed = WebDollar.Blockchain.MinerPoolManagement.minerPoolStatistics.poolBlocksBeingConfirmed;
-                this.poolTimeRemaining = WebDollar.Blockchain.MinerPoolManagement.minerPoolStatistics.poolTimeRemaining;
-
-
-                WebDollar.Blockchain.MinerPoolManagement.minerPoolStatistics.emitter.on("miner-pool/statistics/update",(data)=>{
-
-                    this.poolHashes = data.poolHashes;
-                    this.poolMinersOnline = data.poolMinersOnline;
-                    this.poolBlocksConfirmed = data.poolBlocksConfirmed;
-                    this.poolBlocksConfirmedAndPaid = data.poolBlocksConfirmedAndPaid;
-                    this.poolBlocksUnconfirmed = data.poolBlocksUnconfirmed;
-                    this.poolBlocksBeingConfirmed = data.poolBlocksBeingConfirmed;
-                    this.poolTimeRemaining = data.poolTimeRemaining;
-
-                });
-
-            }
+            getPoolStatistics(data) {
+                this.poolHashes = data.poolHashes;
+                this.poolHashesReported = data.poolHashesReported;
+                this.poolMinersOnline = data.poolMinersOnline;
+                this.poolBlocksConfirmed = data.poolBlocksConfirmed;
+                this.poolBlocksConfirmedAndPaid = data.poolBlocksConfirmedAndPaid;
+                this.poolBlocksUnconfirmed = data.poolBlocksUnconfirmed;
+                this.poolBlocksBeingConfirmed = data.poolBlocksBeingConfirmed;
+                this.poolTimeRemaining = data.poolTimeRemaining;
+            },
 
 
         },
@@ -250,11 +242,24 @@
             });
 
             WebDollar.StatusEvents.on("blockchain/new-network-hash-rate", (networkHashRate)=>{
-
+                
                 this.networkHashRate = networkHashRate;
-
             });
-            
+
+            WebDollar.StatusEvents.on("pools/statistics/update", (data) => {
+                this.poolHashes = data.poolHashes;
+                this.poolHashesReported = data.poolHashesReported;
+                this.poolMinersOnline = data.poolMinersOnline;
+                this.poolBlocksConfirmed = data.poolBlocksConfirmed;
+                this.poolBlocksConfirmedAndPaid = data.poolBlocksConfirmedAndPaid;
+                this.poolBlocksUnconfirmed = data.poolBlocksUnconfirmed;
+                this.poolBlocksBeingConfirmed = data.poolBlocksBeingConfirmed;
+                this.poolTimeRemaining = data.poolTimeRemaining;
+            });
+
+            WebDollar.StatusEvents.on("mining/hash-rate", (hashesPerSecond) => {
+                WebDollar.Blockchain.Mining.minerReportedHashes = hashesPerSecond;
+            });
         }
 
     }

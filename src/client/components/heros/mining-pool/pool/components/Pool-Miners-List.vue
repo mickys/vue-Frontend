@@ -64,15 +64,15 @@
 
         props: {
             displayType: {default: 'list'},
-            minersList: {default: []}
+            minersList: {
+                default: []
+            }
         },
 
         methods:{
 
             selectMiner(index){
-
                 this.$emit('selectMiner', index);
-
             },
 
             getNextReward(element){

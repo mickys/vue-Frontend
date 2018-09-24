@@ -21,7 +21,11 @@
             </span>
 
             <span class="oneLineText">
-                Pool Hash: <span class="normalSpan yellowColor"> {{this.getHashrate }} {{this.getHashrateSign}}</span>
+                Pool Reported Hash: <span class="normalSpan yellowColor"> {{this.getReportedHashrate }} {{this.geteportedHashrateSign}}</span>
+            </span>
+
+            <span class="oneLineText">
+                Pool Actual Hash: <span class="normalSpan yellowColor"> {{this.getHashrate }} {{this.getHashrateSign}}</span>
             </span>
 
             <span class="oneLineText">
@@ -80,6 +84,7 @@
             poolStatus: '',
 
             poolHashes: 0,
+            poolHashesReported: 0,
             poolMinersOnline: 0,
             poolBlocksConfirmed: 0,
             poolBlocksConfirmedAndPaid: 0,
@@ -95,7 +100,7 @@
         computed:{
 
             getPoolPower(){
-                return Utils.showHashes(parseInt((this.poolHashes/10)/this.networkHashRate*100))
+                return Utils.showHashes(parseInt(this.poolHashes/this.networkHashRate*100))
             },
 
             showPoolRemainingTime(){
@@ -176,11 +181,19 @@
 
 
             getHashrate(){
-                return Utils.showHashes(this.poolHashes/10);
+                return Utils.showHashes(this.poolHashes);
             },
 
             getHashrateSign(){
-                return Utils.showHashesSign(this.poolHashes/10);
+                return Utils.showHashesSign(this.poolHashes);
+            },
+
+            getReportedHashrate(){
+                return Utils.showHashes(this.poolHashesReported);
+            },
+
+            geteportedHashrateSign(){
+                return Utils.showHashesSign(this.poolHashesReported);
             },
 
             referralPotential(){

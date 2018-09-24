@@ -18,7 +18,9 @@
 
                 <blockchain-distribution-hero/>
 
-                <miner-pool-hero v-show="!poolActivated"/>
+                <miner-pool-hero />
+                
+                <miner-pool-list-hero/>
 
                 <pool-hero v-show="poolActivated"/>
 
@@ -29,7 +31,7 @@
                 <team-hero/>
 
                 <know-us-hero/>
-
+                
             </div>
 
         </layout>
@@ -58,6 +60,8 @@
     import BlockchainDistributionHero from "client/components/heros/Blockchain-Distribution.hero.vue";
     import MultipleTabs from "../components/heros/Multiple-Tabs.hero.vue";
     import Paper from "../components/heros/Paper.hero.vue";
+    import MinerPoolListHero from "client/components/heros/mining-pool/miner-pool/Miner-Pool-List.hero.vue";
+
 
     export default {
 
@@ -78,7 +82,8 @@
             MinerPoolHero,
             MultipleTabs,
             NewsletterHero,
-            Paper
+            Paper,
+            MinerPoolListHero
         },
 
         data: () => {
