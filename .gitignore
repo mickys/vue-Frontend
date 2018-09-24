@@ -1,12 +1,11 @@
-.DS_Store
+\.DS_Store
 node_modules/
 dist/
 npm-debug.log
 yarn-error.log
-.idea
-*.iml
+\.idea
+*\.iml
 accounts.txt
-
 
 public/hidden
 package-lock\.json
